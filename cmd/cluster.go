@@ -29,13 +29,8 @@ var clusterCmd = &cobra.Command{
 	Short: "Cluster status. Use `help cluster` for more commands",
 	Long: `Cluster information
 
-See help for more subcommands.
-
-Defaults to showing cluster status`,
-	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("cluster called")
-		clusterHealthCmd.Execute()
-	},
+See help for more subcommands.`,
+	Args: cobra.MinimumNArgs(1),
 }
 
 var clusterHealthCmd = &cobra.Command{
