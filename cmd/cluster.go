@@ -15,6 +15,7 @@
 package cmd
 
 import (
+	"bytes"
 	"fmt"
 	"log"
 
@@ -37,14 +38,19 @@ var clusterHealthCmd = &cobra.Command{
 	Use:   "health",
 	Short: "Show cluster health",
 	Run: func(cmd *cobra.Command, args []string) {
-		es, err := client.New(client.WithHost(viper.GetString("config")))
+		es, err := client.New(client.WithHost(viper.GetString("baseurl")))
 		if err != nil {
 			log.Fatalf("Unable to establish connection")
 		}
 
 		res, err := es.Cluster.Health()
-		fmt.Printf("Status: %s\n", res.Response.Status)
+		if err != nil {
+			log.Fatalf("Unable to retrieve cluster health: %s\n", err)
+		}
 
+		buffer := new(bytes.Buffer)
+		buffer.ReadFrom(res.Response.Body)
+		fmt.Printf("%s\n", buffer.String())
 	},
 }
 
